@@ -10,7 +10,8 @@ const { PORT, MONGODB_URL, DB_NAME } = process.env;
 
 const app = express();
 
-app.use(cors());
+const cors_config = { credentials: true, origin: "http://localhost:3000" };
+app.use(cors(cors_config));
 app.use(express.json());
 app.use(cookieParser());
 
