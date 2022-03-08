@@ -5,5 +5,6 @@ export interface UserModel {
   email: string;
   encryptedPassword: string;
   birthday: Date;
+  profileImg: string;
   isAdmin: 0 | 1;
 }
