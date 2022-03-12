@@ -3,10 +3,43 @@ import { PostModel } from "../models/Post.model";
 import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
 import { JwtPayloadModel } from "../models/JwtPayload.model";
 import { Post } from "../collections/posts";
+import { User } from "../collections/users";
 
 export const postsRouter = Router();
 
 postsRouter.use(verifyJwtMiddleware);
+
+postsRouter.get(
+  "/fetch-posts-of-all-connections",
+  async (req: Request, res: Response<PostModel[]>) => {
+    try {
+      const { userId } = req.user as JwtPayloadModel;
+      if (!userId) return res.sendStatus(401);
+
+      const user = await User.findOne(
+        { _id: userId },
+        { connectedWith: 1, _id: 0 }
+      );
+      if (!user) {
+        return res.sendStatus(400);
+      }
+
+      const { connectedWith: userConnections } = user;
+      console.log(userConnections);
+
+      const connectionsPosts = await Post.find({
+        userId: { $in: userConnections },
+      });
+      const userPosts = await Post.find({ userId });
+
+      const concatenatedPosts = connectionsPosts.concat(userPosts);
+
+      res.send(concatenatedPosts);
+    } catch (error: any) {
+      res.status(500).send(error.message);
+    }
+  }
+);
 
 postsRouter.post(
   "/create-post",
