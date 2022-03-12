@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { connect } from "mongoose";
 import { config } from "dotenv";
 import { usersRouter } from "./routers/users";
+import { postsRouter } from "./routers/posts";
 config();
 
 const { PORT, MONGODB_URL, DB_NAME } = process.env;
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
 
 startServer();
 

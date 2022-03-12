@@ -5,6 +5,7 @@ import jsonwebtoken from "jsonwebtoken";
 import { promisify } from "util";
 import { User } from "../collections/users";
 import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
+import { JwtPayloadModel } from "../models/JwtPayload.model";
 import { RegisterBodyModel } from "../models/RegisterBody.model";
 import { UserModel } from "../models/User.model";
 
@@ -48,7 +49,9 @@ usersRouter.post(
 
       const newUser = await User.create(user);
 
-      const jwt = await createJwt();
+      const jwtPayload = { userId: newUser._id };
+
+      const jwt = await createJwt(jwtPayload);
 
       res.cookie("token", jwt, { httpOnly: true, maxAge: 253370764800000 });
       res.send(newUser);
@@ -82,7 +85,9 @@ usersRouter.post(
       return res.status(401).send("Email and password don't match");
     }
 
-    const jwt = await createJwt();
+    const jwtPayload = { userId: user._id };
+
+    const jwt = await createJwt(jwtPayload);
 
     res.cookie("token", jwt, { httpOnly: true, maxAge: 253370764800000 });
     res.send(user);
@@ -98,6 +103,6 @@ usersRouter.post(
   }
 );
 
-async function createJwt() {
-  return promisifiedSign({}, JWT_SECRET!);
+async function createJwt(jwtPayload: JwtPayloadModel) {
+  return promisifiedSign(jwtPayload, JWT_SECRET!);
 }
