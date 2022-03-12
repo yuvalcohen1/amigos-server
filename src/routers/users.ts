@@ -1,12 +1,12 @@
-import { Request, Response, Router } from "express";
 import bcrypt from "bcrypt";
+import { config } from "dotenv";
+import { Request, Response, Router } from "express";
 import jsonwebtoken from "jsonwebtoken";
 import { promisify } from "util";
 import { User } from "../collections/users";
+import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
 import { RegisterBodyModel } from "../models/RegisterBody.model";
 import { UserModel } from "../models/User.model";
-import { config } from "dotenv";
-import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
 
 config();
 
@@ -22,8 +22,8 @@ usersRouter.post(
     req: Request<{}, {}, RegisterBodyModel>,
     res: Response<UserModel | string>
   ) => {
-    const { firstName, lastName, email, password, birthday } = req.body;
-    if (!firstName || !lastName || !email || !password || !birthday) {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
       return res.status(400).send("You have missed some body properties");
     }
 
@@ -41,7 +41,6 @@ usersRouter.post(
         lastName,
         email,
         encryptedPassword,
-        birthday,
         profileImg:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDv94lhq4g5u-kKZvmR_zxMJOHDuViXaN0bg&usqp=CAU",
         isAdmin: 0,

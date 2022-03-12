@@ -3,5 +3,4 @@ export interface RegisterBodyModel {
   lastName: string;
   email: string;
   password: string;
-  birthday: Date;
 }
