@@ -8,6 +8,7 @@ interface IUser extends Document {
   encryptedPassword: string;
   profileImg: string;
   connectedWith: string[];
+  askedToConnectWith: string[];
   isAdmin: 0 | 1;
 }
 
@@ -18,6 +19,7 @@ const UserSchema = new Schema<IUser>({
   encryptedPassword: { type: String, required: true },
   profileImg: { type: String, required: true },
   connectedWith: { type: [String], required: true },
+  askedToConnectWith: { type: [String], required: true },
   isAdmin: { type: Number, required: true, trim: true },
 });
 

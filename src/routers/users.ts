@@ -45,6 +45,7 @@ usersRouter.post(
         profileImg:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDv94lhq4g5u-kKZvmR_zxMJOHDuViXaN0bg&usqp=CAU",
         connectedWith: [],
+        askedToConnectWith: [],
         isAdmin: 0,
       };
 
