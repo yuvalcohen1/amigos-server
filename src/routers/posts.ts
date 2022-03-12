@@ -10,7 +10,7 @@ export const postsRouter = Router();
 postsRouter.use(verifyJwtMiddleware);
 
 postsRouter.get(
-  "/fetch-posts-of-all-connections",
+  "/fetch-all-posts",
   async (req: Request, res: Response<PostModel[]>) => {
     try {
       const { userId } = req.user as JwtPayloadModel;
