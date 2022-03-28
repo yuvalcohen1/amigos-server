@@ -25,7 +25,6 @@ postsRouter.get(
       }
 
       const { connectedWith: userConnections } = user;
-      console.log(userConnections);
 
       const connectionsPosts = await Post.find({
         userId: { $in: userConnections },
