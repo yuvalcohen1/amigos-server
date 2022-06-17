@@ -17,7 +17,7 @@ const promisifiedSign = promisify(jsonwebtoken.sign);
 export const usersRouter = Router();
 
 usersRouter.post(
-  "/register",
+  "/sign-up",
   async (
     req: Request<{}, {}, RegisterBodyModel>,
     res: Response<UserModel | string>
@@ -60,7 +60,7 @@ usersRouter.post(
 );
 
 usersRouter.post(
-  "/login",
+  "/sign-in",
   async (
     req: Request<{}, {}, { email: string; password: string }>,
     res: Response<UserModel | string>
