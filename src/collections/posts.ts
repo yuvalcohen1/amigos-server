@@ -8,7 +8,7 @@ interface IPost extends Document {
 }
 
 const PostSchema = new Schema<IPost>({
-  userId: { type: String, required: true },
+  userId: { type: String, required: true, ref: "User" },
   content: { type: String, required: true },
   attachedPhoto: { type: String },
 });

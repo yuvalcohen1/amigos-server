@@ -5,7 +5,6 @@ export interface UserModel {
   email: string;
   encryptedPassword: string;
   profileImg: string;
-  connectedWith: string[];
-  askedToConnect: string[];
+  connections: string[];
   isAdmin: 0 | 1;
 }

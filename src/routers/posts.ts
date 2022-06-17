@@ -1,9 +1,8 @@
 import { Request, Response, Router } from "express";
-import { PostModel } from "../models/Post.model";
-import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
-import { JwtPayloadModel } from "../models/JwtPayload.model";
 import { Post } from "../collections/posts";
-import { User } from "../collections/users";
+import { verifyJwtMiddleware } from "../helpers/verifyJwtMiddleware";
+import { PostModel } from "../models/Post.model";
+import { UserModel } from "../models/User.model";
 
 export const postsRouter = Router();
 
@@ -13,25 +12,23 @@ postsRouter.get(
   "/fetch-all-posts",
   async (req: Request, res: Response<PostModel[]>) => {
     try {
-      const { userId } = req.user as JwtPayloadModel;
-      if (!userId) return res.sendStatus(401);
-
-      const user = await User.findOne(
-        { _id: userId },
-        { connectedWith: 1, _id: 0 }
-      );
+      const user = req.user as UserModel;
       if (!user) {
-        return res.sendStatus(400);
+        return res.sendStatus(401);
       }
 
-      const { connectedWith: userConnections } = user;
+      const { connections: userConnections } = user;
 
       const connectionsPosts = await Post.find({
         userId: { $in: userConnections },
-      });
-      const userPosts = await Post.find({ userId });
+      }).populate("userId");
+
+      const userPosts = await Post.find({ userId: user._id }).populate(
+        "userId"
+      );
 
       const concatenatedPosts = connectionsPosts.concat(userPosts);
+      console.log(concatenatedPosts);
 
       res.send(concatenatedPosts);
     } catch (error: any) {
@@ -47,7 +44,7 @@ postsRouter.post(
     res: Response<PostModel | string>
   ) => {
     try {
-      const { userId } = req.user as JwtPayloadModel;
+      const { _id: userId } = req.user as UserModel;
       const { content, attachedPhoto } = req.body;
       if (!content) {
         return res.status(400).send("The post content are missing");
